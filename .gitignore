@@ -3,6 +3,7 @@
 *.cpp
 *.xml
 *.properties
+makefile
 
 # Object files
 *.o
