@@ -1,0 +1,8 @@
+[SERVER]
+ip=127.0.01
+port=10011
+sid=1
+
+[QUERY]
+login=serveradmin
+password=admin
