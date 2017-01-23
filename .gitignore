@@ -1,3 +1,9 @@
+*.mk
+*.bash
+*.cpp
+*.xml
+*.properties
+
 # Object files
 *.o
 *.ko
