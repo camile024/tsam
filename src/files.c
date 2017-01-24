@@ -61,6 +61,30 @@ char* getNextField(char* data, char* value, char* fieldname){
 
 int createSnapshot(char* buffer){
     FILE* f_snapshot;
+    char filename[250] = "";
+    char* bufptr = buffer;
+    struct tm* currtime = getCurrentTime();
+    sprintf(filename, "%ssnap_%02d-%02d_%02d-%02d-%d", FILENAME_SNAPS, currtime->tm_hour, currtime->tm_min,
+            currtime->tm_mday, currtime->tm_mon+1, currtime->tm_year + 1900);
+    f_snapshot = fopen(filename, "w");
+    if (f_snapshot == NULL){
+        plog("[ERR] Snapshot file could not be created.\n");
+        return -1;
+    }
+    printf("Data size: %u\n", strlen(bufptr));
+    char cid[8] = "";
+    bufptr = getNextField(bufptr, cid, "cid=");
+    while (bufptr != NULL){
+        char chname[100] = "";
+        char clients[5] = "";
+        bufptr = getNextField(bufptr, chname, "channel_name=");
+        bufptr = getNextField(bufptr, clients, "total_clients=");
+        fprintf(f_snapshot, "cid=%s\nname=%s\nclients=%s\n\n", cid, chname, clients);
+        bufptr = getNextField(bufptr, cid, "cid=");
+    }
+    fclose(f_snapshot);
+    plog("Snapshot %s saved.\n", filename);
+    return 1;
 }
 
 
@@ -84,6 +108,24 @@ void getSettings(){
     getValue(buffer, username);
     getField(f_settings, buffer, "password=");
     getValue(buffer, password);
+    getField(f_settings, buffer, "delay-seconds=");
+    getValue(buffer, delay);
+    getField(f_settings, buffer, "old-time=");
+    getValue(buffer, oldtime);
+    getField(f_settings, buffer, "peak-start=");
+    getValue(buffer, peakstart);
+    getField(f_settings, buffer, "peak-end=");
+    getValue(buffer, peakend);
+    getField(f_settings, buffer, "quiet-start=");
+    getValue(buffer, quietstart);
+    getField(f_settings, buffer, "quiet-end=");
+    getValue(buffer, quietend);
+    getField(f_settings, buffer, "sound-success=");
+    getValue(buffer, soundsuccess);
+    getField(f_settings, buffer, "sound-failure=");
+    getValue(buffer, soundfailure);
+    getField(f_settings, buffer, "sound-failure-quiet=");
+    getValue(buffer, soundfailurequiet);
     plog("Host: %s:%s\nServerID: %s\nUsername: %s\n", ip, port, sid, username);
     fclose(f_settings);
 }

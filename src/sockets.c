@@ -21,6 +21,7 @@ int net_getinfo(char* buffer){
     login(socketfd);
     plog("Logged in.\n");
     selectServer(socketfd);
+    bzero(buffer, BUFFER_SIZE);
     getCommand(socketfd, "channellist", buffer);
     plog("Received data.\n");
     close(socketfd);
@@ -113,6 +114,11 @@ int getCommand(int socketfd, char* cmd, char* response){
         plog("[ERR] Couldn't select server (writing to socket failure).\n");
         return -1;
     }
-    recv(socketfd, response, BUFFER_SIZE, 0);
+    int bytesRecv = PACKET_SIZE;
+    char tempbuf[PACKET_SIZE] = "";
+    while (bytesRecv == PACKET_SIZE){
+        bytesRecv = recv(socketfd, tempbuf, PACKET_SIZE, 0);
+        strcat(response, tempbuf);
+    }
     return 0;
 }

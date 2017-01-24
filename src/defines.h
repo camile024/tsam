@@ -9,4 +9,5 @@
 
 /* Program settings */
 #define VERSION "0.9"
-#define BUFFER_SIZE 3000
+#define BUFFER_SIZE 75000
+#define PACKET_SIZE 1448
