@@ -1,5 +1,5 @@
 [SERVER]
-ip=127.0.01
+ip=127.0.0.1
 port=10011
 sid=1
 
@@ -8,13 +8,8 @@ login=serveradmin
 password=admin
 
 [SETTINGS]
-delay-seconds=60  --delay between snapshots in seconds
+delay-seconds=10  --delay between snapshots in seconds
 old-time=62  --removes logs older than value in days
 peak-start=13  --peak hours start time
 peak-end=22  --peak hours end time
-quiet-start=21  --quiet time (no sounds)
-quiet-end=11
-sound-success=1  --a sound every snapshot
-sound-failure=1  --a sound if the program fails/closes
-sound-failure-quiet=1  --play the failure sound during quiet hours?
 

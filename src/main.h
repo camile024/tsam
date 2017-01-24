@@ -28,11 +28,10 @@ extern char FILENAME_SETTINGS[];
 extern char FILENAME_LOGS[];
 extern char FILENAME_SNAPS[];
 extern char FILENAME_COMP[];
-extern char FILENAME_SOUNDSUCC[];
-extern char FILENAME_SOUNDFAIL[];
 
 int main(int argc, char** argv);
 struct tm* getCurrentTime(void);
+void startUpdater(void);
 void openLogs(void);
 void cleanExit(void);
 int updateData(void);

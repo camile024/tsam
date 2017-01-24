@@ -4,6 +4,8 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>channel.h</itemPath>
+      <itemPath>compressor.h</itemPath>
       <itemPath>defines.h</itemPath>
       <itemPath>files.h</itemPath>
       <itemPath>libs.h</itemPath>
@@ -17,6 +19,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>compressor.c</itemPath>
       <itemPath>files.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>sockets.c</itemPath>
@@ -46,6 +49,12 @@
           <standard>10</standard>
         </cTool>
       </compileType>
+      <item path="channel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="compressor.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="compressor.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="defines.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="files.c" ex="false" tool="0" flavor2="0">
@@ -84,6 +93,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="channel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="compressor.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="compressor.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="defines.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="files.c" ex="false" tool="0" flavor2="0">

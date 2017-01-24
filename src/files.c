@@ -28,6 +28,10 @@ int getValue(char* buffer, char* value){
             && buffer[position] != ' '
             && buffer[position] != '\0'){
         value[position2++] = buffer[position];
+        /* Replaces spaces \s in channel names */
+        if (position2 > 0 && value[position2] == 's' && value[position2-1] == '\\'){
+            value[--position2] = ' ';
+        }
     }
     value[position2] = '\0';
     return position;
@@ -37,8 +41,8 @@ int getValue(char* buffer, char* value){
  * buffer to store the whole line in afterwards.
  */
 void getField(FILE* file, char* buffer, char* fieldname){
-    char field[15];
-    while(strcmp(field, fieldname) != 0 && fgets(buffer, BUFFER_SIZE-1, file) != 0){
+    char field[25];
+    while(strcmp(field, fieldname) != 0 && fgets(buffer, BUFFER_FILESIZE-1, file) != 0){
         memcpy(field, buffer, strlen(fieldname));
         field[strlen(fieldname)] = '\0';
     }
@@ -58,7 +62,7 @@ char* getNextField(char* data, char* value, char* fieldname){
     return result + getValue(result + strlen(fieldname) - 1, value);
 }
 
-
+/* Creates a snapshot file with current time and data in its name */
 int createSnapshot(char* buffer){
     FILE* f_snapshot;
     char filename[250] = "";
@@ -96,7 +100,7 @@ void getSettings(){
     if (f_settings == NULL){
         plog("[ERR] Settings file not found. Dumping and terminating...\n");
     }
-    char buffer[BUFFER_SIZE] = "";
+    char buffer[BUFFER_FILESIZE] = "";
     char field[15] = "";
     getField(f_settings, buffer, "ip=");
     getValue(buffer, ip);
@@ -116,16 +120,6 @@ void getSettings(){
     getValue(buffer, peakstart);
     getField(f_settings, buffer, "peak-end=");
     getValue(buffer, peakend);
-    getField(f_settings, buffer, "quiet-start=");
-    getValue(buffer, quietstart);
-    getField(f_settings, buffer, "quiet-end=");
-    getValue(buffer, quietend);
-    getField(f_settings, buffer, "sound-success=");
-    getValue(buffer, soundsuccess);
-    getField(f_settings, buffer, "sound-failure=");
-    getValue(buffer, soundfailure);
-    getField(f_settings, buffer, "sound-failure-quiet=");
-    getValue(buffer, soundfailurequiet);
     plog("Host: %s:%s\nServerID: %s\nUsername: %s\n", ip, port, sid, username);
     fclose(f_settings);
 }

@@ -10,6 +10,7 @@
 #include "main.h"
 #include "files.h"
 #include "sockets.h"
+#include "compressor.h"
 
 /* Server settings and program settings */
 FILE* f_logs;
@@ -20,13 +21,8 @@ char username[40] = "";
 char password[100] = "";
 char delay[8] = "";
 char oldtime[5] = "";
-char peakstart[3]= "";
-char peakend[3] = "";
-char quietstart[3] = "";
-char quietend[3] = "";
-char soundsuccess[2] = "";
-char soundfailure[2] = "";
-char soundfailurequiet[2] = "";
+char peakstart[5]= "";
+char peakend[5] = "";
 
 /* Directories */
 //char currdir[250] = "";
@@ -34,24 +30,30 @@ char FILENAME_SETTINGS[250] = "tsam_settings";
 char FILENAME_LOGS[250] = "logs/log";
 char FILENAME_SNAPS[250] = "data/";
 char FILENAME_COMP[250] = "tsam_compressed";
-char FILENAME_SOUNDSUCC[250] = "sound/success.wav";
-char FILENAME_SOUNDFAIL[250] = "sound/fail.wav";
     
+
+
+
+/* Returns struct tm pointer with current date and time */
 struct tm* getCurrentTime(){
     time_t epochtime = time(NULL);
     struct tm* curtime = localtime(&epochtime);
     return curtime;
 }
 
+
+
 int main(int argc, char** argv) {
     //getcwd(currdir, sizeof(currdir));
-    if (argc > 1 && strcmp(argv[1], "-analyse") == 0)
-        ;
+    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a")))
+        startCompressor();
     else
         startUpdater();
     return (EXIT_SUCCESS);
 }
 
+
+/* Opens log file */
 void openLogs(){
     struct tm* t_last = getCurrentTime();
     char logdate[30] = "";
@@ -62,10 +64,14 @@ void openLogs(){
     f_logs = fopen(usedfilename, "a");
     if (f_logs == NULL){
         printf("Couldn't create logfile (%s).\n", usedfilename);
-        return(EXIT_FAILURE);
+        cleanExit();
     }
 }
 
+
+
+
+/* Runs the software as updating app */
 void startUpdater(){
     struct tm* t_last = getCurrentTime();
     //prepareFilenames();
@@ -81,17 +87,24 @@ void startUpdater(){
         updateData();
         fclose(f_logs);
         openLogs();
+        char removal[100];
+        sprintf(removal, "find %s -mtime +%s -exec rm {} \\;", FILENAME_SNAPS, oldtime);
+        system(removal);
     }
     cleanExit();
 }
+
+
 
 /*
  * Saves logs and exits
  */
 void cleanExit(){
     struct tm* cur = getCurrentTime();
-    plog("Terminating... (%02d:%02d %02d-%02d-%d)\n", cur->tm_hour, cur->tm_min, cur->tm_mday, cur->tm_mon+1, cur->tm_year+1900);
-    fclose(f_logs);
+    if (f_logs != NULL){
+        plog("Terminating... (%02d:%02d %02d-%02d-%d)\n", cur->tm_hour, cur->tm_min, cur->tm_mday, cur->tm_mon+1, cur->tm_year+1900);
+        fclose(f_logs);
+    }
     exit(EXIT_SUCCESS);
 }
 

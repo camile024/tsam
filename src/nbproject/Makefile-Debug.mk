@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/compressor.o \
 	${OBJECTDIR}/files.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/sockets.o
@@ -63,6 +64,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ts_activity_monitor: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ts_activity_monitor ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/compressor.o: compressor.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/compressor.o compressor.c
 
 ${OBJECTDIR}/files.o: files.c
 	${MKDIR} -p ${OBJECTDIR}
