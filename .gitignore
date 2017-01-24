@@ -1,11 +1,3 @@
-src/nbproject/
-*.mk
-*.bash
-*.cpp
-*.xml
-*.properties
-makefile
-
 # Object files
 *.o
 *.ko
