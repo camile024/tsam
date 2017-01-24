@@ -6,6 +6,11 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 Platform: Linux (development: Ubuntu, target: Raspberry Pi)  
 IDE: NetBeans  
 
+##ToDo:
+-Add old file removal  
+-Add analysing and compressing log files (including peak times)  
+-Add sounds (including quiet times)  
+  
 ##Features:
 Every set period of time (default: 1 hour) the program:  
 -Stores channel IDs, channel name, number of clients on the channel  
