@@ -28,10 +28,14 @@ int getValue(char* buffer, char* value){
             && buffer[position] != ' '
             && buffer[position] != '\0'){
         value[position2++] = buffer[position];
-        /* Replaces spaces \s in channel names */
-        if (position2 > 0 && value[position2] == 's' && value[position2-1] == '\\'){
-            value[--position2] = ' ';
-        }
+        /* Replaces spaces \s in channel names
+         * MOVED TO COMPRESSOR PRINTING FUNCTION
+         * Space is used as a separator for values up above and can't be removed
+         * since error MSGs from TS servers have spaces in them as separators */
+        /* if (position2 > 1 && value[position2-1] == 's' && value[position2-2] == '\\'){
+            value[position2-2] = ' ';
+            position--;
+        } */
     }
     value[position2] = '\0';
     return position;
@@ -68,14 +72,14 @@ int createSnapshot(char* buffer){
     char filename[250] = "";
     char* bufptr = buffer;
     struct tm* currtime = getCurrentTime();
-    sprintf(filename, "%ssnap_%02d-%02d_%02d-%02d-%d", FILENAME_SNAPS, currtime->tm_hour, currtime->tm_min,
-            currtime->tm_mday, currtime->tm_mon+1, currtime->tm_year + 1900);
+    sprintf(filename, "%ssnap_%d-%02d-%02d_%02d-%02d", FILENAME_SNAPS,
+            currtime->tm_year + 1900, currtime->tm_mon+1, currtime->tm_mday, currtime->tm_hour, currtime->tm_min);
     f_snapshot = fopen(filename, "w");
     if (f_snapshot == NULL){
         plog("[ERR] Snapshot file could not be created.\n");
         return -1;
     }
-    printf("Data size: %u\n", strlen(bufptr));
+    printf("Data size: %lu\n", strlen(bufptr));
     char cid[8] = "";
     bufptr = getNextField(bufptr, cid, "cid=");
     while (bufptr != NULL){
@@ -83,7 +87,7 @@ int createSnapshot(char* buffer){
         char clients[5] = "";
         bufptr = getNextField(bufptr, chname, "channel_name=");
         bufptr = getNextField(bufptr, clients, "total_clients=");
-        fprintf(f_snapshot, "cid=%s\nname=%s\nclients=%s\n\n", cid, chname, clients);
+        fprintf(f_snapshot, "cid=%s\nchannel_name=%s\ntotal_clients=%s\n\n", cid, chname, clients);
         bufptr = getNextField(bufptr, cid, "cid=");
     }
     fclose(f_snapshot);

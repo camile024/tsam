@@ -45,10 +45,23 @@ struct tm* getCurrentTime(){
 
 int main(int argc, char** argv) {
     //getcwd(currdir, sizeof(currdir));
-    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a")))
+    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
+        strcat(FILENAME_LOGS, "-comp");
+        openLogs();
+        getSettings();
+    } else {
+        openLogs();
+    }
+    plog("\n\n=================================================================\n");
+    plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" ========\n");
+    plog("=================================================================\n");
+    
+    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
         startCompressor();
-    else
+    } else {
+        getSettings();
         startUpdater();
+    }
     return (EXIT_SUCCESS);
 }
 
@@ -75,11 +88,6 @@ void openLogs(){
 void startUpdater(){
     struct tm* t_last = getCurrentTime();
     //prepareFilenames();
-    openLogs();
-    plog("\n\n=================================================================\n");
-    plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" ========\n");
-    plog("=================================================================\n");
-    getSettings();
     plog("[LOG] Current time: %02d:%02d. Waiting for the next snapshot.\n", t_last->tm_hour, t_last->tm_min);
     int sleeptime = atoi(delay);
     while (1){
@@ -90,6 +98,7 @@ void startUpdater(){
         char removal[100];
         sprintf(removal, "find %s -mtime +%s -exec rm {} \\;", FILENAME_SNAPS, oldtime);
         system(removal);
+        plog("[LOG] Current time: %02d:%02d. Waiting for the next snapshot.\n", t_last->tm_hour, t_last->tm_min);
     }
     cleanExit();
 }

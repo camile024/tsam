@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=ts_activity_monitor
+PROJECTNAME=tsam
 
 # Active Configuration
 DEFAULTCONF=Debug

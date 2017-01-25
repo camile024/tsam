@@ -18,6 +18,7 @@ struct channel {
     
     float average;
     float average_w;
-    int average_wsum;
+    long average_wsum;
+    long average_wcom;
     
 };

@@ -48,6 +48,9 @@
         <cTool>
           <standard>10</standard>
         </cTool>
+        <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/tsam</output>
+        </linkerTool>
       </compileType>
       <item path="channel.h" ex="false" tool="3" flavor2="0">
       </item>

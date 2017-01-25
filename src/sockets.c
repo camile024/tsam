@@ -116,9 +116,18 @@ int getCommand(int socketfd, char* cmd, char* response){
     }
     int bytesRecv = PACKET_SIZE;
     char tempbuf[PACKET_SIZE] = "";
+    /* TS3 servers send packets with strings of size 1448B (unless less data available) and
+     the last packet is ended with character 13 (carriage return) */
     while (bytesRecv == PACKET_SIZE){
         bytesRecv = recv(socketfd, tempbuf, PACKET_SIZE, 0);
         strcat(response, tempbuf);
+        printf("recv: %d\n", bytesRecv);
+        /* In case we get less data, but server isn't done sending
+         (e.g. poor internet connection)*/
+        if (bytesRecv != PACKET_SIZE && tempbuf[bytesRecv-1] != 13){
+            bytesRecv = 0;
+        }
+        usleep(2500);
     }
     return 0;
 }

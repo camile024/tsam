@@ -6,27 +6,25 @@
 #include "compressor.h"
 #include "channel.h"
 
-struct channel channels[1000];
+struct channel channels[MAX_CHANNELS_STORED];
 int channelnum = 0;
 
+/* Starts the program in (c)ompressing/(a)nalysing mode */
 void startCompressor(){
-    for (int i = 0; i < 1000; i++){
+    for (int i = 0; i < MAX_CHANNELS_STORED; i++){
         channels[i].cid = -1;
     }
-    printf("\n\n=================================================================\n");
-    printf("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" ========\n");
-    printf("=================================================================\n");
     char choice;
     while(choice != '3'){
-        printf("Compressor interface enabled.\n");
-        printf("Select compressing mode: \n");
-        printf("1. Create new compressed file based on snapshots\n");
-        printf("2. Display channel data from compressed file\n");
-        printf("3. Exit\n");
-        scanf("%c", &choice);
+        plog("\nCompressor interface enabled.\n");
+        plog("Select compressing mode: \n");
+        plog("1. Create new compressed file based on snapshots\n");
+        plog("2. Display channel data from compressed file\n");
+        plog("3. Exit\n");
+        scanf(" %c", &choice);
         switch(choice){
             case '1':
-                printf("Warning! If there's already a compressed file in the current"
+                plog("Warning! If there's already a compressed file in the current"
                         "directory it WILL be overwritten.\n"
                         "All the snapshot files WILL be removed after this operation.\n"
                         "Are you sure you want to continue (y/n)?\n");
@@ -37,14 +35,45 @@ void startCompressor(){
                     continue;
                 break;
             case '2':
-                ;
+                showCompressed();
                 break;
         }
     }
     exit(EXIT_SUCCESS);
 }
 
+/* Shows compressed file's data */
+void showCompressed(){
+    compressLoad();
+    printChannels();;
+}
+
+
+
+/* Loads the compressed file's data into memory */
+void compressLoad(){
+    FILE * f_compressed;
+    char buffer[BUFFER_SIZE];
+    f_compressed = fopen(FILENAME_COMP, "r");
+    if (f_compressed == NULL){
+        plog("Couldn't read %s.\n", FILENAME_COMP);
+        return;
+    }
+    readFile(f_compressed, buffer);
+    loadChannelsFromCompressed(buffer);
+    fclose(f_compressed);
+}
+
+
+
+/* Saves channel info from all the snapshot files
+ * into one, compressed file
+ */
 void compressNew(){
+    channelnum = 0;
+    for (int i = 0; i < MAX_CHANNELS_STORED; i++){
+        channels[i].cid = -1;
+    }
     FILE * f_compressed, * f_temp;
     DIR *directory = opendir(FILENAME_SNAPS);
     struct tm* time = getCurrentTime();
@@ -52,57 +81,93 @@ void compressNew(){
     struct dirent * entry;
     entry = readdir(directory);
     if (directory == NULL || entry == NULL){
-        printf("Couldn't open snapshot directory or no snapshots available.\n");
+        plog("Couldn't open snapshot directory or no snapshots available.\n");
         return;
     }
     f_compressed = fopen(FILENAME_COMP, "w");
     if (f_compressed == NULL){
-        printf("Couldn't create %s.\n", FILENAME_COMP);
+        plog("Couldn't create %s.\n", FILENAME_COMP);
         return;
     }
-    while (entry != NULL){
+    int count = 0;
+    while (entry != NULL && entry->d_name[0] != '.'){
         char filename[100] = "";
         strcpy(filename, FILENAME_SNAPS);
-        strcpy(filename, entry->d_name);
+        strcat(filename, entry->d_name);
         f_temp = fopen(filename, "r");
-        filenameToTime(entry->d_name, time);
-        readSnapshot(f_temp, buffer);
+        filenameToTime(entry->d_name, time, 0);
+        readFile(f_temp, buffer);
         updateChannels(buffer, time);
-        //saveCompressedChannels();
         fclose(f_temp);
         entry = readdir(directory);
+        plog("Read %d files...\n", ++count);
     }
+    saveCompressedChannels(f_compressed);
+    fclose(f_compressed);
+    closedir(directory);
+    plog("Operation Complete.\n");
 }
 
 
+/* Saves channel info into compressed file */
+void saveCompressedChannels(FILE* f_temp){
+    plog("Channelnum: %d\n", channelnum);
+    for (int i=0; i < channelnum; i++){
+        struct channel* c = &channels[i];
+        struct tm t = c->lastActive;
+        fprintf(f_temp, 
+            "cid=%d\n"
+            "lastName=%s\n"
+            "lastUserNum=%d\n"
+            "lastActive=%d-%02d-%02d_%02d-%02d\n"
+            "average=%2.2f\n"
+            "average_w=%2.2f\n"
+            "average_wsum=%ld\n"
+            "average_wcom=%ld\n", 
+                c->cid, c->lastName, c->lastUserNum,
+                t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min,
+                c->average, c->average_w, c->average_wsum, c->average_wcom);
+    }
+}
 
-void filenameToTime(char* filename, struct tm* time){
+/* Reads a given filename and transfers the date and time from it
+ * to structure time. Filename format: snap_yyyy:mm_dd-hh-mm. 
+ * Can be used for other strings, but start has to be specified according to:
+ * start = yy_begin - 5, where yyyy_begin is the index of the first 'y'.
+ * Spacer types (':', '-', '_') don't matter as long as particular
+ * datetime characters are in the correct indexes from each other and start
+ * value passed is correct
+ */
+void filenameToTime(char* filename, struct tm* time, int start){
     char buf[6] = "";
-    memcpy(buf, filename[5], 2);
-    buf[2] = '\0';
     buf[5] = '\0';
-    time->tm_hour = atoi(buf);
-    memcpy(buf, filename[8], 2);
-    time->tm_min = atoi(buf);
-    memcpy(buf, filename[11], 2);
-    time->tm_mday = atoi(buf);
-    memcpy(buf, filename[14], 2);
-    time->tm_mon = atoi(buf);
-    memcpy(buf, filename[17], 4);
+    memcpy(buf, &filename[start+5], 4);
     time->tm_year = atoi(buf);
+    buf[2] = '\0';
+    memcpy(buf, &filename[start+10], 2);
+    time->tm_mon = atoi(buf);
+    memcpy(buf, &filename[start+13], 2);
+    time->tm_mday = atoi(buf);
+    memcpy(buf, &filename[start+16], 2);
+    time->tm_hour = atoi(buf);
+    memcpy(buf, &filename[start+19], 2);
+    time->tm_min = atoi(buf);
 }
 
 
-
-void readSnapshot(FILE* f_temp, char* buffer){
+/* Reads a whole file into buffer */
+void readFile(FILE* f_temp, char* buffer){
     char line[BUFFER_FILESIZE];
+    long offset = 0;
     while (!feof(f_temp)){
-        fscanf(f_temp, line, BUFFER_FILESIZE);
-        strcat(buffer, line);
+        fscanf(f_temp, "%s", line);
+        sprintf(&buffer[offset], "%s\n", line);
+        offset += strlen(line)+1;
     }
 }
 
 
+/* Checks if the hour given is within current peak hours */
 int withinPeak(int hour){
     int peak1 = atoi(peakstart);
     int peak2 = atoi(peakend);
@@ -121,6 +186,10 @@ int withinPeak(int hour){
 
 
 
+
+/* Updates channels in the memory with info in buffer (a previously
+ * read file). If a channel isn't in the memory yet, it gets added.
+*/
 void updateChannels(char* buffer, struct tm* time){
     int index = -1;
     char* bufptr = buffer;
@@ -129,8 +198,8 @@ void updateChannels(char* buffer, struct tm* time){
     while (bufptr != NULL){
         char chname[100] = "";
         char clients[5] = "";
-        bufptr = getNextField(bufptr, chname, "name=");
-        bufptr = getNextField(bufptr, clients, "clients=");
+        bufptr = getNextField(bufptr, chname, "channel_name=");
+        bufptr = getNextField(bufptr, clients, "total_clients=");
         int icid = atoi(cid);
         int iclients = atoi(clients);
         index = findChannel(icid);
@@ -139,39 +208,124 @@ void updateChannels(char* buffer, struct tm* time){
             index = insertChannel(icid);
             channels[index].average = iclients;
             if (withinPeak(time->tm_hour)){
-                channels[index].average_w = iclients * 2;
+                channels[index].average_wcom = iclients * 2;
                 channels[index].average_wsum = 2;
             } else {
-                channels[index].average_w = iclients * 1;
+                channels[index].average_wcom = iclients * 1;
                 channels[index].average_wsum = 1;
             }
         } else {
             channels[index].average = (channels[index].average + iclients) / (float) 2.00;
-            float avgw = channels[index].average_w;
             int weight;
             if (withinPeak(time->tm_hour)){
                 weight = 2;
             } else {
                 weight = 1;
             }
-            channels[index].average_wsum += weight;
-            float avgws = channels[index].average_wsum;
-            channels[index].average_w = (avgw + (iclients * weight))/avgws;
+            channels[index].average_wcom += (iclients * weight);
+            channels[index].average_wsum += 1;
+            long avgws = channels[index].average_wsum;
+            long avgwcom = channels[index].average_wcom;
         }
-        if (clients > 0){
+        if (iclients > 0){
             channels[index].lastActive = *time;
-            channels[index].lastUserNum = clients;
+            channels[index].lastUserNum = iclients;
         }
         strcpy(channels[index].lastName, chname);
         bufptr = getNextField(bufptr, cid, "cid=");
     }
 }
 
+
+
+
+
+/* Loads channels into memory from the compressed file */
+void loadChannelsFromCompressed(char* buffer){
+    channelnum = 0;
+    bzero(channels, sizeof(channels[0]) * MAX_CHANNELS_STORED);
+    int index = -1;
+    char* bufptr = buffer;
+    char cid[8] = "";
+    bufptr = getNextField(bufptr, cid, "cid=");
+    while (bufptr != NULL){
+        char chname[100] = "";
+        char clients[10] = "";
+        char lastActive[30] = "";
+        char average[10] = "";
+        char average_w[10] = "";
+        char average_wsum[10] = "";
+        char average_wcom[10] = "";
+        bufptr = getNextField(bufptr, chname, "lastName=");
+        bufptr = getNextField(bufptr, clients, "lastUserNum=");
+        bufptr = getNextField(bufptr, lastActive, "lastActive=");
+        bufptr = getNextField(bufptr, average, "average=");
+        bufptr = getNextField(bufptr, average_w, "average_w=");
+        bufptr = getNextField(bufptr, average_wsum, "average_wsum=");
+        bufptr = getNextField(bufptr, average_wcom, "average_wcom=");
+        int icid = atoi(cid);
+        int iclients = atoi(clients);
+        float favg = atof(average);
+        float favg_w = atof(average_w);
+        long lavg_wsum = atoi(average_wsum);
+        long lavg_wcom = atoi(average_wcom);
+        struct tm* tlastActive = getCurrentTime();
+        filenameToTime(lastActive, tlastActive, -5);
+        struct channel* c = &channels[channelnum];
+        c->cid = icid;
+        c->lastUserNum = iclients;
+        c->lastActive = *tlastActive;
+        c->average = favg;
+        c->average_w = favg_w;
+        c->average_wsum = lavg_wsum;
+        c->average_wcom = lavg_wcom;
+        strcpy(c->lastName, chname);
+        channelnum++;
+        bufptr = getNextField(bufptr, cid, "cid=");
+    }
+}
+
+/* Prints all the channels in the memory*/
+void printChannels(){
+    for (int i=0; i < channelnum; i++){
+        struct channel* c = &channels[i];
+        /* Replace \s with spaces for clarity */
+        char *ptr;
+        ptr = strstr(c->lastName, "\\s");
+        while (ptr != NULL){
+            ptr[0] = ' ';
+            ptr[1] = ' ';
+            ptr = strstr(c->lastName, "\\s");
+        } 
+        /* End of replacing code */
+        
+        /* Count weighted average now */
+        channels[i].average_w = channels[i].average_wcom / (float)channels[i].average_wsum;
+        /**/
+        plog("=[CID: %d]=\n"
+        "Last known name: %s\n"
+        "Last known activity: %02d:%02d %02d/%02d/%d\n"
+        "Last known number of clients: %d\n"
+        "Average number of clients: %2.2f\n"
+        "Channel's rating [incomplete]: %2.2f\n\n",
+                c->cid, c->lastName,
+                c->lastActive.tm_hour, c->lastActive.tm_min,
+                c->lastActive.tm_mday, c->lastActive.tm_mon,
+                c->lastActive.tm_year,
+                c->lastUserNum, c->average, c->average_w);
+    }
+}
+
+
+/* Checks if the channel with channelID cid exists in the memory 
+ * returns index of the channel in the channels[] array if found, negative
+ * number if not found
+ */
 int findChannel(int cid){
     int left = 0;
     int right = channelnum-1;
     int m;
-    while (left < right){
+    while (left <= right){
         m = (left+right)/2;
         if (channels[m].cid == cid)
             return m;
@@ -184,7 +338,9 @@ int findChannel(int cid){
 }
 
 
-
+/* Creates space in a correct position for a channel with
+ * given cid and returns its index in the array
+*/
 int insertChannel(int cid){
     int i = channelnum-1;
     channels[i].cid = cid;
