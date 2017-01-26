@@ -25,10 +25,10 @@ char peakstart[5]= "";
 char peakend[5] = "";
 
 /* Directories */
-//char currdir[250] = "";
+char currdir[250] = "";
 char FILENAME_SETTINGS[250] = "tsam_settings";
-char FILENAME_LOGS[250] = "logs/log";
-char FILENAME_SNAPS[250] = "data/";
+char FILENAME_LOGS[250] = "logs";
+char FILENAME_SNAPS[250] = "data";
 char FILENAME_COMP[250] = "tsam_compressed";
     
 
@@ -44,9 +44,10 @@ struct tm* getCurrentTime(){
 
 
 int main(int argc, char** argv) {
-    //getcwd(currdir, sizeof(currdir));
+    prepareFilenames();
+    prepareDirectories(argv);
     if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
-        strcat(FILENAME_LOGS, "-comp");
+        strcat(FILENAME_LOGS, "/log-comp");
         openLogs();
         getSettings();
     } else {
@@ -71,7 +72,7 @@ void openLogs(){
     struct tm* t_last = getCurrentTime();
     char logdate[30] = "";
     char usedfilename[250];
-    sprintf(logdate, "_%d-%02d-%d", t_last->tm_mday, t_last->tm_mon+1, t_last->tm_year+1900);
+    sprintf(logdate, "/log_%d-%02d-%d", t_last->tm_mday, t_last->tm_mon+1, t_last->tm_year+1900);
     strcpy(usedfilename, FILENAME_LOGS);
     strcat(usedfilename, logdate);
     f_logs = fopen(usedfilename, "a");
@@ -96,7 +97,7 @@ void startUpdater(){
         fclose(f_logs);
         openLogs();
         char removal[100];
-        sprintf(removal, "find %s -mtime +%s -exec rm {} \\;", FILENAME_SNAPS, oldtime);
+        sprintf(removal, "find %s/ -mtime +%s -exec rm {} \\;", FILENAME_SNAPS, oldtime);
         system(removal);
         plog("[LOG] Current time: %02d:%02d. Waiting for the next snapshot.\n", t_last->tm_hour, t_last->tm_min);
     }

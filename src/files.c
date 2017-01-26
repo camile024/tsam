@@ -1,3 +1,4 @@
+#include <libgen.h>
 #include "libs.h"
 #include "defines.h"
 #include "main.h"
@@ -72,7 +73,7 @@ int createSnapshot(char* buffer){
     char filename[250] = "";
     char* bufptr = buffer;
     struct tm* currtime = getCurrentTime();
-    sprintf(filename, "%ssnap_%d-%02d-%02d_%02d-%02d", FILENAME_SNAPS,
+    sprintf(filename, "%s/snap_%d-%02d-%02d_%02d-%02d", FILENAME_SNAPS,
             currtime->tm_year + 1900, currtime->tm_mon+1, currtime->tm_mday, currtime->tm_hour, currtime->tm_min);
     f_snapshot = fopen(filename, "w");
     if (f_snapshot == NULL){
@@ -145,21 +146,65 @@ void plog(char* format, ...){
     va_end(va_list);
 }
 
-/* In case it's needed some day
- */ /*
+/* Prepare filenames relative to executable
+ */ 
 void prepareFilenames(){
     char names[250] = "";
-    strcpy(names, currdir);
-    strcat(names, "/");
-    strcat(names, FILENAME_LOGS);
-    FILENAME_LOGS[0] = '\0';
-    strcpy(FILENAME_LOGS, names);
-    names[0] = '\0';
+    char names_temp[250] = "";
+    char filelogs[250] = "";
+    char filesets[250] = "";
+    char filesnaps[250] = "";
+    char filecomp[250] = "";
+    char* execname;
+    int execlen = 0;
     
-    strcpy(names, currdir);
-    strcat(names, "/");
-    strcat(names, FILENAME_SETTINGS);
+    /* Store basedir in names[] */
+    readlink("/proc/self/exe", names_temp, 250);
+    execname = basename(names_temp);
+    execlen = strlen(execname);
+    memcpy(names, names_temp, sizeof(names_temp[0]) * (strlen(names_temp) - execlen));
+    names[sizeof(names_temp[0]) * (strlen(names_temp) - execlen)] = '\0';
+    //strcat(names, "/");
+    
+    /* Logs */
+    strcpy(filelogs, names);
+    strcat(filelogs, FILENAME_LOGS);
+    FILENAME_LOGS[0] = '\0';
+    strcpy(FILENAME_LOGS, filelogs);
+    
+    /* Settings */
+    strcpy(filesets, names);
+    strcat(filesets, FILENAME_SETTINGS);
     FILENAME_SETTINGS[0] = '\0';
-    strcpy(FILENAME_SETTINGS, names);
-    names[0] = '\0';
-} */
+    strcpy(FILENAME_SETTINGS, filesets);
+    
+    /* Snapshots */
+    strcpy(filesnaps, names);
+    strcat(filesnaps, FILENAME_SNAPS);
+    FILENAME_SNAPS[0] = '\0';
+    strcpy(FILENAME_SNAPS, filesnaps);
+    
+    /* Compressed */
+    strcpy(filecomp, names);
+    strcat(filecomp, FILENAME_COMP);
+    FILENAME_COMP[0] = '\0';
+    strcpy(FILENAME_COMP, filecomp);
+    
+} 
+
+
+void prepareDirectories(char** argv){
+    DIR * datadirectory = opendir(FILENAME_SNAPS);
+    DIR * logsdirectory = opendir(FILENAME_LOGS);
+    char cmd[150] = "";
+    if (datadirectory == NULL){
+        sprintf(cmd, "mkdir %s", FILENAME_SNAPS);
+        system(cmd);
+    }
+    if (logsdirectory == NULL){
+        sprintf(cmd, "mkdir %s", FILENAME_LOGS);
+        system(cmd);
+    }
+    closedir(datadirectory);
+    closedir(logsdirectory);
+}

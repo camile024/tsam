@@ -26,6 +26,7 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH} -c"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -c</runcommandpicklistitem>
+          <runcommandpicklistitem></runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>

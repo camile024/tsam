@@ -125,7 +125,7 @@ int getCommand(int socketfd, char* cmd, char* response){
         /* In case we get less data, but server isn't done sending
          (e.g. poor internet connection)*/
         if (bytesRecv != PACKET_SIZE && tempbuf[bytesRecv-1] != 13){
-            bytesRecv = 0;
+            bytesRecv = PACKET_SIZE;
         }
         usleep(2500);
     }
