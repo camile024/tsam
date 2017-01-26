@@ -22,15 +22,17 @@ Each time requested the program:
 *average activity (based solely on the files provided)  
 *~~weighted average activity~~ channel rating (based on peak-hours of the server time)  
 
-##Installation (Ubuntu)
+##Installation/Usage (Ubuntu)
 1) Get contents of the bin/ubuntu folder  
 2) Edit 'tsam_settings' file  
 3) Run tsam (./tsam in terminal) or add to autostart  
+4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
   
-##Installation (Raspberry Pi/Debian-based distros)
+##Installation/Usage (Raspberry Pi/Debian-based distros)
 1) Copy contents of the bin/rasppi/ folder to your raspberry pi  
 2) Edit 'tsam_settings' file  
 3) './tsam' in terminal or just run 'tsam' file (can set to autostart)  
+4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
   
 ##Compilation (Linux)
 1) Copy contents of the src/ folder (make sure to copy .h + .c + makefile files and nbproject folder)  
