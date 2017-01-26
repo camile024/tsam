@@ -7,9 +7,7 @@ Platform: Linux (development: Ubuntu, target: Raspberry Pi)
 IDE: NetBeans  
 
 ##ToDo:
--Add old file removal  
--Add analysing and compressing log files (including peak times)  
--Add sounds (including quiet times)  
+-Anything listed in the issues
   
 ##Features:
 Every set period of time (default: 1 hour) the program:  
@@ -21,9 +19,8 @@ Each time requested the program:
 *channel ID  
 *last known name  
 *last recorded activity (users > 0)  
-*weighted average activity (based on peak-hours of the server time)  
 *average activity (based solely on the files provided)  
-
+*~~weighted average activity~~ channel rating (based on peak-hours of the server time)  
 
 ##Installation (Ubuntu)
 1) Get contents of the bin/ubuntu folder  
@@ -38,5 +35,5 @@ Each time requested the program:
 ##Compilation (Linux)
 1) Copy contents of the src/ folder (make sure to copy .h + .c + makefile files and nbproject folder)  
 2) 'make' in terminal while being in the folder  
-3) Executable will be in 'dist/Debug/GNU-Linux/  
-4) Make sure to put a valid tsam_settings file and create 'logs' and 'data' folders in the executable folder  
+3) Executable will be in 'dist/Debug/GNU-Linux/
+4) Make sure to provide tsam_settings file in the executable folder
