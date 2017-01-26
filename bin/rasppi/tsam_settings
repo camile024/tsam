@@ -1,0 +1,27 @@
+[SERVER]
+Your server's IP:
+ip=127.0.01
+
+Server's query port:
+port=10011
+
+Virtual server's ID (usually 1 unless multiple servers present):
+sid=1
+
+[QUERY DATA]
+login=serveradmin
+password=admin
+
+[SETTINGS]
+Delay between snapshots in seconds:
+delay-seconds=3600
+
+Removes logs older than value in days:
+old-time=31
+
+Peak hours start time:
+peak-start=13 
+
+Peak hours end time:
+peak-end=22  
+
