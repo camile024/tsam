@@ -1,0 +1,3 @@
+
+Version 0.91:
+-Fixed a bug, where the last few channels get duplicated in the records
