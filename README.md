@@ -37,5 +37,5 @@ Each time requested the program:
 ##Compilation (Linux)
 1) Copy contents of the src/ folder (make sure to copy .h + .c + makefile files and nbproject folder)  
 2) 'make' in terminal while being in the folder  
-3) Executable will be in 'dist/Debug/GNU-Linux/
+3) Executable will be in 'dist/Debug/GNU-Linux/  
 4) Make sure to provide tsam_settings file in the executable folder
