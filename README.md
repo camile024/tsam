@@ -7,7 +7,7 @@ Platform: Linux (development: Ubuntu, target: Raspberry Pi)
 IDE: NetBeans  
 
 ##ToDo:
--Anything listed in the issues
+-Anything listed in the [issues](https://github.com/camile024/tsam/issues)
   
 ##Features:
 Every set period of time (default: 1 hour) the program:  
