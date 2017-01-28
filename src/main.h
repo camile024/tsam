@@ -16,11 +16,6 @@ extern char delay[];
 extern char oldtime[];
 extern char peakstart[];
 extern char peakend[];
-extern char quietstart[];
-extern char quietend[];
-extern char soundsuccess[];
-extern char soundfailure[];
-extern char soundfailurequiet[]; 
 
 /* Directories */
 extern char currdir[];

@@ -26,7 +26,7 @@ void startCompressor(){
             case '1':
                 plog("Warning! If there's already a compressed file in the current"
                         "directory it WILL be overwritten.\n"
-                        "All the snapshot files WILL be removed after this operation.\n"
+                        "Snapshot files will not be removed after the operation.\n"
                         "Are you sure you want to continue (y/n)?\n");
                 scanf(" %c", &choice);
                 if (choice == 'y')
@@ -91,8 +91,9 @@ void compressNew(){
     }
     int count = 0;
     while (entry != NULL && entry->d_name[0] != '.'){
-        char filename[100] = "";
+        char filename[150] = "";
         strcpy(filename, FILENAME_SNAPS);
+        strcat(filename, "/");
         strcat(filename, entry->d_name);
         f_temp = fopen(filename, "r");
         filenameToTime(entry->d_name, time, 0);
@@ -120,8 +121,8 @@ void saveCompressedChannels(FILE* f_temp){
             "lastName=%s\n"
             "lastUserNum=%d\n"
             "lastActive=%d-%02d-%02d_%02d-%02d\n"
-            "average=%2.2f\n"
-            "average_w=%2.2f\n"
+            "average=%2.4f\n"
+            "average_w=%2.4f\n"
             "average_wsum=%ld\n"
             "average_wcom=%ld\n", 
                 c->cid, c->lastName, c->lastUserNum,
@@ -306,8 +307,8 @@ void printChannels(){
         "Last known name: %s\n"
         "Last known activity: %02d:%02d %02d/%02d/%d\n"
         "Last known number of clients: %d\n"
-        "Average number of clients: %2.2f\n"
-        "Channel's rating [incomplete]: %2.2f\n\n",
+        "Average number of clients: %2.4f\n"
+        "Channel's rating [incomplete]: %2.4f\n\n",
                 c->cid, c->lastName,
                 c->lastActive.tm_hour, c->lastActive.tm_min,
                 c->lastActive.tm_mday, c->lastActive.tm_mon,

@@ -1,0 +1,9 @@
+
+Version 0.91 (28/01/2017):
+-Increased the number of digits after decimal point for 'average' and' channel rank'
+-Fixed compressor failing to load files due to wrong pathnames
+-Fixed incorrect compressor message regarding snapshot files
+-Fixed a bug, where the last few channels get duplicated in the records
+
+Version 0.9:
+-First release

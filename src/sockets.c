@@ -120,8 +120,9 @@ int getCommand(int socketfd, char* cmd, char* response){
      the last packet is ended with character 13 (carriage return) */
     while (bytesRecv == PACKET_SIZE){
         bytesRecv = recv(socketfd, tempbuf, PACKET_SIZE, 0);
+        tempbuf[bytesRecv] = '\0';
         strcat(response, tempbuf);
-        printf("recv: %d\n", bytesRecv);
+        plog("recv: %d\n", bytesRecv);
         /* In case we get less data, but server isn't done sending
          (e.g. poor internet connection)*/
         if (bytesRecv != PACKET_SIZE && tempbuf[bytesRecv-1] != 13){
