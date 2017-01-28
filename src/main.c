@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
         openLogs();
         getSettings();
     } else {
+        strcat(FILENAME_LOGS, "/log");
         openLogs();
     }
     plog("\n\n=================================================================\n");
@@ -72,7 +73,7 @@ void openLogs(){
     struct tm* t_last = getCurrentTime();
     char logdate[30] = "";
     char usedfilename[250];
-    sprintf(logdate, "/log_%d-%02d-%d", t_last->tm_mday, t_last->tm_mon+1, t_last->tm_year+1900);
+    sprintf(logdate, "_%d-%02d-%d", t_last->tm_mday, t_last->tm_mon+1, t_last->tm_year+1900);
     strcpy(usedfilename, FILENAME_LOGS);
     strcat(usedfilename, logdate);
     f_logs = fopen(usedfilename, "a");
