@@ -10,17 +10,18 @@ IDE: NetBeans
 -Anything listed in the [issues](https://github.com/camile024/tsam/issues)
   
 ##Features:
-Every set period of time (default: 1 hour) the program:  
--Stores channel IDs, channel name, number of clients on the channel  
--Removes old logs (if specified)  
+Program does the following repeatedly, after time interval and during times specified by user (e.g. every 1 hour, 12:00-00:00):  
+-Stores channel IDs, parent channel's ID, channel name, number of clients on the channel  
+-Removes old data (if specified, e.g. data older than 7 days)  
   
 Each time requested the program:  
--Calculates/shows each channel's data based on the files provided:  
+-Calculates/shows each channel's data based on the files gathered:  
 *channel ID  
+*parent channel ID  
 *last known name  
 *last recorded activity (users > 0)  
 *average activity (based solely on the files provided)  
-*~~weighted average activity~~ channel rating (based on peak-hours of the server time)  
+*~~weighted average activity~~ channel rating (based on peak-hours of the server time specified by user and subchannels' activity)  
 
 ##Installation/Usage (Ubuntu)
 1) Get contents of the [bin/ubuntu](bin/ubuntu) folder  
@@ -41,7 +42,16 @@ Each time requested the program:
 4) Make sure to provide tsam_settings file in the executable folder
 
 ##Changelog:
-
+  
+Version 0.92 (29/01/2017):  
+NOT COMPATIBLE WITH 0.9/0.91 SNAPSHOTS/SETTINGS FILE(S)!  
+-Added saving compressor's sorted/view results to file  
+-Added sorting to the compressor's interface  
+-Added parent ID to recorded data  
+-Channel rank now based on peak hours and activity on sub-channels (and their sub-channels etc.)  
+-Added generating snapshots only during specified hours  
+-Addded testing connection and login details on startup  
+  
 ###Version 0.91 (28/01/2017):
 -Increased the number of digits after decimal point for 'average' and' channel rank'  
 -Fixed compressor failing to load files due to wrong pathnames  
