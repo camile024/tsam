@@ -9,15 +9,12 @@
 
 
 void startCompressor(void);
-void showCompressed(void);
+void showCompressed(char, char, char);
 void compressLoad(void);
 void compressNew();
 void saveCompressedChannels(FILE*);
-void filenameToTime(char*,struct tm*,int);
-void readFile(FILE*, char*);
-int withinPeak(int);
 void updateChannels(char*, struct tm*);
 void loadChannelsFromCompressed(char*);
-void printChannels(void);
+void printChannels(char, FILE*);
 int findChannel(int);
 int insertChannel(int);

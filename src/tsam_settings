@@ -1,6 +1,6 @@
 [SERVER]
 Your server's IP:
-ip=127.0.01
+ip=127.0.0.1
 
 Server's query port:
 port=10011
@@ -14,14 +14,18 @@ password=admin
 
 [SETTINGS]
 Delay between snapshots in seconds:
-delay-seconds=3600
+delay-seconds=10
 
 Removes logs older than value in days:
-old-time=31
+old-time=62
 
 Peak hours start time:
-peak-start=13 
+peak-start=14 
 
 Peak hours end time:
-peak-end=22  
+peak-end=21  
 
+Create snapshots only during these hours:
+record-start=07
+
+record-end=00

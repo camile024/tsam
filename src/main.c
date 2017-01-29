@@ -11,6 +11,8 @@
 #include "files.h"
 #include "sockets.h"
 #include "compressor.h"
+#include "utilities.h"
+#include "channel.h"
 
 /* Server settings and program settings */
 FILE* f_logs;
@@ -23,23 +25,21 @@ char delay[8] = "";
 char oldtime[5] = "";
 char peakstart[5]= "";
 char peakend[5] = "";
+char recordstart[5] = "";
+char recordend[5] = "";
+
 
 /* Directories */
-char currdir[250] = "";
-char FILENAME_SETTINGS[250] = "tsam_settings";
-char FILENAME_LOGS[250] = "logs";
-char FILENAME_SNAPS[250] = "data";
-char FILENAME_COMP[250] = "tsam_compressed";
+char currdir[FILENAME_SIZE] = "";
+char FILENAME_SETTINGS[FILENAME_SIZE] = "tsam_settings";
+char FILENAME_LOGS[FILENAME_SIZE] = "logs";
+char FILENAME_SNAPS[FILENAME_SIZE] = "data";
+char FILENAME_COMP[FILENAME_SIZE] = "tsam_compressed";
     
 
 
 
-/* Returns struct tm pointer with current date and time */
-struct tm* getCurrentTime(){
-    time_t epochtime = time(NULL);
-    struct tm* curtime = localtime(&epochtime);
-    return curtime;
-}
+
 
 
 
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
         openLogs();
     }
     plog("\n\n=================================================================\n");
-    plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" ========\n");
+    plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" =======\n");
     plog("=================================================================\n");
     
     if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
 void openLogs(){
     struct tm* t_last = getCurrentTime();
     char logdate[30] = "";
-    char usedfilename[250];
+    char usedfilename[FILENAME_SIZE];
     sprintf(logdate, "_%d-%02d-%d", t_last->tm_mday, t_last->tm_mon+1, t_last->tm_year+1900);
     strcpy(usedfilename, FILENAME_LOGS);
     strcat(usedfilename, logdate);
@@ -89,7 +89,8 @@ void openLogs(){
 /* Runs the software as updating app */
 void startUpdater(){
     struct tm* t_last = getCurrentTime();
-    //prepareFilenames();
+    if (testConnection() < 0)
+        cleanExit();
     plog("[LOG] Current time: %02d:%02d. Waiting for the next snapshot.\n", t_last->tm_hour, t_last->tm_min);
     int sleeptime = atoi(delay);
     while (1){
@@ -129,13 +130,21 @@ int updateData(){
     plog("\n============================================\n");
     plog("======== ACTIVITY DUMP. TIME: %02d:%02d ========\n", curtime->tm_hour, curtime->tm_min);
     plog("============================================\n");
-    
-    int error = net_getinfo(buffer);
-    if (error == 0)
-        error = createSnapshot(buffer);
-    if (error < 0){
-        plog("======== ERROR: ACTIVITY DUMP FAILED =======\n");
+    if (withinRecord()){
+        if (withinPeak(curtime->tm_hour)){
+            plog("--- Peak hour ---\n");
+        } else {
+            plog("--- Non-peak ---\n");
+        }
+        int error = net_getinfo(buffer);
+        if (error == 0)
+            error = createSnapshot(buffer);
+        if (error < 0){
+            plog("======== ERROR: ACTIVITY DUMP FAILED =======\n");
+        } else {
+            plog("=========== ACTIVITY DUMP SUCCESS ==========\n");
+        }
     } else {
-        plog("=========== ACTIVITY DUMP SUCCESS ==========\n");
+        plog("========== ABORT: NON-RECORD HOUR ==========\n");
     }
 }

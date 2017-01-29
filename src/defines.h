@@ -8,8 +8,9 @@
 #pragma once
 
 /* Program settings */
-#define VERSION "0.91"
+#define VERSION "0.92"
 #define BUFFER_SIZE 75000
 #define BUFFER_FILESIZE 500
+#define FILENAME_SIZE 250
 #define PACKET_SIZE 1448
 #define MAX_CHANNELS_STORED 1500

@@ -5,6 +5,7 @@
 #include "main.h"
 #include "sockets.h"
 #include "files.h"
+#include "utilities.h"
 
 /* Connects to the server and gets a list of channels. Stores the server's
  * response in 'buffer' 
@@ -18,14 +19,39 @@ int net_getinfo(char* buffer){
     if (socketfd < 0)
         return socketfd;
     recv(socketfd, buffer, BUFFER_SIZE, 0);
-    login(socketfd);
+    if (login(socketfd) < 0)
+        return -1;
     plog("Logged in.\n");
-    selectServer(socketfd);
+    if (selectServer(socketfd) < 0)
+        return -2;
     bzero(buffer, BUFFER_SIZE);
-    getCommand(socketfd, "channellist", buffer);
+    if (getCommand(socketfd, "channellist", buffer) < 0)
+        return -3;
     plog("Received data.\n");
     close(socketfd);
     return 0;
+}
+
+/* Tests connection details without actually doing anything else */
+int testConnection(){
+    char buffer[BUFFER_SIZE];
+    plog("Testing connection and login details...\n");
+    bzero(buffer, BUFFER_SIZE);
+    int socketfd, errno;
+    plog("\t->Testing connection to the server...\n");
+    socketfd = net_connect();
+    if (socketfd < 0)
+        return socketfd;
+    recv(socketfd, buffer, BUFFER_SIZE, 0);
+    plog("\t->Testing logging in...\n");
+    if (login(socketfd) < 0)
+        return -1;
+    plog("\t->Testing server selection...\n");
+    if (selectServer(socketfd) < 0)
+        return -1;
+    bzero(buffer, BUFFER_SIZE);
+    plog("All tests successful. Closing connection.\n");
+    close(socketfd);
 }
 
 /* Connects to the server, returns socket's file descriptor */

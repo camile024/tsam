@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "main.h"
 #include "files.h"
+#include "utilities.h"
 
 /*
  * Checks for EOF and terminates program if found
@@ -70,7 +71,7 @@ char* getNextField(char* data, char* value, char* fieldname){
 /* Creates a snapshot file with current time and data in its name */
 int createSnapshot(char* buffer){
     FILE* f_snapshot;
-    char filename[250] = "";
+    char filename[FILENAME_SIZE] = "";
     char* bufptr = buffer;
     struct tm* currtime = getCurrentTime();
     sprintf(filename, "%s/snap_%d-%02d-%02d_%02d-%02d", FILENAME_SNAPS,
@@ -82,13 +83,15 @@ int createSnapshot(char* buffer){
     }
     printf("Data size: %lu\n", strlen(bufptr));
     char cid[8] = "";
+    char pid[8] = "";
     bufptr = getNextField(bufptr, cid, "cid=");
     while (bufptr != NULL){
         char chname[100] = "";
         char clients[5] = "";
+        bufptr = getNextField(bufptr, pid, "pid=");
         bufptr = getNextField(bufptr, chname, "channel_name=");
         bufptr = getNextField(bufptr, clients, "total_clients=");
-        fprintf(f_snapshot, "cid=%s\nchannel_name=%s\ntotal_clients=%s\n\n", cid, chname, clients);
+        fprintf(f_snapshot, "cid=%s\npid=%s\nchannel_name=%s\ntotal_clients=%s\n\n", cid, pid, chname, clients);
         bufptr = getNextField(bufptr, cid, "cid=");
     }
     fclose(f_snapshot);
@@ -104,6 +107,7 @@ void getSettings(){
     f_settings = fopen(FILENAME_SETTINGS, "r");
     if (f_settings == NULL){
         plog("[ERR] Settings file not found. Dumping and terminating...\n");
+        cleanExit();
     }
     char buffer[BUFFER_FILESIZE] = "";
     char field[15] = "";
@@ -125,6 +129,10 @@ void getSettings(){
     getValue(buffer, peakstart);
     getField(f_settings, buffer, "peak-end=");
     getValue(buffer, peakend);
+    getField(f_settings, buffer, "record-start=");
+    getValue(buffer, recordstart);
+    getField(f_settings, buffer, "record-end=");
+    getValue(buffer, recordend);
     plog("Host: %s:%s\nServerID: %s\nUsername: %s\n", ip, port, sid, username);
     fclose(f_settings);
 }
@@ -132,34 +140,20 @@ void getSettings(){
 
 
 
-/*
- * Prints to both stdout ant file, use instead of printf
- * if the message should be logged
- */
-void plog(char* format, ...){
-    va_list va_list;
-    va_start(va_list, format);
-    vfprintf(f_logs, format, va_list);
-    va_end(va_list);
-    va_start(va_list, format);
-    vfprintf(stdout, format, va_list);
-    va_end(va_list);
-}
-
 /* Prepare filenames relative to executable
  */ 
 void prepareFilenames(){
-    char names[250] = "";
-    char names_temp[250] = "";
-    char filelogs[250] = "";
-    char filesets[250] = "";
-    char filesnaps[250] = "";
-    char filecomp[250] = "";
+    char names[FILENAME_SIZE] = "";
+    char names_temp[FILENAME_SIZE] = "";
+    char filelogs[FILENAME_SIZE] = "";
+    char filesets[FILENAME_SIZE] = "";
+    char filesnaps[FILENAME_SIZE] = "";
+    char filecomp[FILENAME_SIZE] = "";
     char* execname;
     int execlen = 0;
     
     /* Store basedir in names[] */
-    readlink("/proc/self/exe", names_temp, 250);
+    readlink("/proc/self/exe", names_temp, FILENAME_SIZE);
     execname = basename(names_temp);
     execlen = strlen(execname);
     memcpy(names, names_temp, sizeof(names_temp[0]) * (strlen(names_temp) - execlen));
@@ -192,7 +186,7 @@ void prepareFilenames(){
     
 } 
 
-
+/* Create needed directories if they don't exist yet */
 void prepareDirectories(char** argv){
     DIR * datadirectory = opendir(FILENAME_SNAPS);
     DIR * logsdirectory = opendir(FILENAME_LOGS);

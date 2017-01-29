@@ -12,6 +12,7 @@
 
 struct channel {
     int cid;
+    int pid;
     int lastUserNum;
     struct tm lastActive;
     char lastName[100];
