@@ -3,18 +3,18 @@ Teamspeak Activity Monitor
 
 This software is used to log in to your teamspeak server using TCP/IP protocol and your query data, to gather and store details about the server. I use it on my Raspberry Pi, running 24/7 to determine which channels are abandoned and which channels are particularily active to move them higher up the hierarchy (less scrolling).  
   
-Platform: Linux (development: Ubuntu, target: Raspberry Pi)  
-IDE: NetBeans  
+**Platform:** Linux (development: Ubuntu, target: Raspberry Pi)  
+**IDE:** NetBeans  
 
 ##ToDo:
 -Anything listed in the [issues](https://github.com/camile024/tsam/issues)
   
 ##Features:
-Program does the following repeatedly, after time interval and during times specified by user (e.g. every 1 hour, 12:00-00:00):  
+**Program does the following repeatedly, after time interval and during times specified by user (e.g. every 1 hour, 12:00-00:00):**  
 -Stores channel IDs, parent channel's ID, channel name, number of clients on the channel  
 -Removes old data (if specified, e.g. data older than 7 days)  
   
-Each time requested the program:  
+**Each time requested the program:**  
 -Calculates/shows each channel's data based on the files gathered:  
 *channel ID  
 *parent channel ID  
@@ -43,8 +43,8 @@ Each time requested the program:
 
 ##Changelog:
   
-Version 0.92 (29/01/2017):  
-NOT COMPATIBLE WITH 0.9/0.91 SNAPSHOTS/SETTINGS FILE(S)!  
+###Version 0.92 (29/01/2017):  
+**NOT COMPATIBLE WITH 0.9/0.91 SNAPSHOTS/SETTINGS FILE(S)!**  
 -Added saving compressor's sorted/view results to file  
 -Added sorting to the compressor's interface  
 -Added parent ID to recorded data  
