@@ -9,6 +9,7 @@
 
 
 int net_getinfo(char*);
+int testConnection();
 int net_connect();
 int login(int);
 int selectServer(int);

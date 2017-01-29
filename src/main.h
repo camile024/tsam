@@ -16,6 +16,8 @@ extern char delay[];
 extern char oldtime[];
 extern char peakstart[];
 extern char peakend[];
+extern char recordstart[];
+extern char recordend[];
 
 /* Directories */
 extern char currdir[];
@@ -25,7 +27,7 @@ extern char FILENAME_SNAPS[];
 extern char FILENAME_COMP[];
 
 int main(int argc, char** argv);
-struct tm* getCurrentTime(void);
+
 void startUpdater(void);
 void openLogs(void);
 void cleanExit(void);

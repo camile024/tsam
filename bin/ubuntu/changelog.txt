@@ -1,4 +1,13 @@
 
+Version 0.92:
+NOT COMPATIBLE WITH 0.9/0.91 SNAPSHOTS/SETTINGS FILE(S)!
+-Added saving compressor's sorted/view results to file
+-Added sorting to the compressor's interface
+-Added parent ID to recorded data
+-Channel rank now based on peak hours and activity on sub-channels (and their sub-channels etc.)
+-Added generating snapshots only during specified hours
+-Addded testing connection and login details on startup
+
 Version 0.91 (28/01/2017):
 -Increased the number of digits after decimal point for 'average' and' channel rank'
 -Fixed compressor failing to load files due to wrong pathnames

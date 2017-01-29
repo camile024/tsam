@@ -7,15 +7,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/kamil/NetBeansProjects/tsam/compressor.c</file>
-            <file>file:/home/kamil/NetBeansProjects/tsam/files.c</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/sockets.h</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/main.h</file>
             <file>file:/home/kamil/NetBeansProjects/tsam/libs.h</file>
-            <file>file:/home/kamil/NetBeansProjects/tsam/channel.h</file>
             <file>file:/home/kamil/NetBeansProjects/tsam/main.c</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/defines.h</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/compressor.c</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/utilities.c</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/files.c</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/channel.h</file>
             <file>file:/home/kamil/NetBeansProjects/tsam/compressor.h</file>
             <file>file:/home/kamil/NetBeansProjects/tsam/sockets.c</file>
             <file>file:/home/kamil/NetBeansProjects/tsam/files.h</file>
-            <file>file:/home/kamil/NetBeansProjects/tsam/defines.h</file>
+            <file>file:/home/kamil/NetBeansProjects/tsam/utilities.h</file>
         </group>
     </open-files>
 </project-private>

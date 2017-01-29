@@ -38,7 +38,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/compressor.o \
 	${OBJECTDIR}/files.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/sockets.o
+	${OBJECTDIR}/sockets.o \
+	${OBJECTDIR}/utilities.o
 
 
 # C Compiler Flags
@@ -84,6 +85,11 @@ ${OBJECTDIR}/sockets.o: sockets.c nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sockets.o sockets.c
+
+${OBJECTDIR}/utilities.o: utilities.c nbproject/Makefile-${CND_CONF}.mk
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utilities.o utilities.c
 
 # Subprojects
 .build-subprojects:
