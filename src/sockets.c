@@ -25,7 +25,7 @@ int net_getinfo(char* buffer){
     if (selectServer(socketfd) < 0)
         return -2;
     bzero(buffer, BUFFER_SIZE);
-    if (getCommand(socketfd, "channellist", buffer) < 0)
+    if (getCommand(socketfd, "channellist -flags", buffer) < 0)
         return -3;
     plog("Received data.\n");
     close(socketfd);

@@ -18,6 +18,7 @@ extern char peakstart[];
 extern char peakend[];
 extern char recordstart[];
 extern char recordend[];
+extern char ignoretemp[];
 
 /* Directories */
 extern char currdir[];

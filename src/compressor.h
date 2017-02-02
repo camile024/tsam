@@ -7,8 +7,8 @@
  */
 #pragma once
 
-
-void startCompressor(void);
+void compressorAuto(int, char**);
+void startCompressor(int, char**);
 void showCompressed(char, char, char);
 void compressLoad(void);
 void compressNew();
