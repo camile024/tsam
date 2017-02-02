@@ -31,7 +31,7 @@ file. Cannot be interacted with and runs until either closed by user or an error
 ##With parameter -c
 Example: ./tsam -c  
 Used to compile all the snapshot files into a compressed file, which analyses all the snapshot files and provides statistics for
-each channel. Includes a text-based GUI to display the results, sort them, or save to file
+each channel. Includes a text-based UI to display the results, sort them, or save to file
 ##With parameter -a
 Example: **./tsam -a [main_parameter] [extra_options]**
 Can be used as a Linux command-line tool. Behaves like ./tsam -c, but accepts a set of parameters and exits automatically after finishing.
