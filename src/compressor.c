@@ -9,13 +9,79 @@
 
 struct channel channels[MAX_CHANNELS_STORED];
 int channelnum = 0;
+int filenum = 0;
 
-/* Starts the program in (c)ompressing/(a)nalysing mode */
-void startCompressor(){
+/* Automatic compressor with specified parameters */
+void compressorAuto(int argc, char** argv){
+    char **input = argv;
+    int current = 2;
+    if (strcmp(input[current], "compress") == 0){
+        compressNew();
+        cleanExit();
+    } else if (strcmp(input[current], "print") == 0){
+        /* Load arguments */
+        char order = '1';
+        char criteria = '1';
+        char save = 'n';
+        for (current++; current < argc; current++){
+            if (strcmp(input[current], "-inc") == 0){
+                order = '1';
+            } else if (strcmp(input[current], "-dec") == 0){
+                order = '2';
+            } else if (strcmp(input[current], "-save") == 0){
+                save = 'y';
+            } else if (strcmp(input[current], "-cid") == 0){
+                criteria = '1';
+            } else if (strcmp(input[current], "-name") == 0){
+                criteria = '2';
+            } else if (strcmp(input[current], "-act") == 0){
+                criteria = '3';
+            } else if (strcmp(input[current], "-avg") == 0){
+                criteria = '4';
+            } else if (strcmp(input[current], "-rank") == 0){
+                criteria = '5';
+            } else {
+                plog("Argument %s unrecognised.\n", input[current]);
+            }
+        }
+        compressNew();
+        showCompressed(criteria, order, save);
+        cleanExit();
+    } else if (strcmp(input[current], "help") == 0){
+        plog("Usage: ./tsam -a [main_argument] [extra_arguments]\n"
+                "main_argument: print, compress, help\n"
+                "\tprint\t- creates a compressed file from snapshots and prints"
+                " the contents\n"
+                "\tcompress\t- creates a compressed file only\n"
+                "\thelp\t- displays this message\n"
+                "\n"
+                "extra_arguments (optional):\n"
+                "\tfor 'print':\n"
+                "\t\t-inc\t- sort results in increasing order\n"
+                "\t\t-dec\t- sort results in decreasing order\n"
+                "\t\t-save\t- save results to file\n"
+                "\t\t-cid\t- sort according to CID\n"
+                "\t\t-name\t - sort according to name\n"
+                "\t\t-act\t- sort according to last activity\n"
+                "\t\t-avg\t- sort according to average number of clients\n"
+                "\t\t-rank\t - sort according to channel rank\n"
+                "Example: ./tsam -a print -inc -rank -save\t will print all the channels, sorted "
+                "by channel rank in increasing order and save the result to file\n\n");
+        cleanExit();
+    } else {
+        plog("Invalid first argument after -a (choose 'print', 'compress' or 'help'). Aborting.\n");
+        cleanExit();
+    }
+}
+
+/* Starts the program in (c)ompressing/(a)utomatic mode */
+void startCompressor(int argc, char** argv){
     for (int i = 0; i < MAX_CHANNELS_STORED; i++){
         channels[i].cid = -1;
     }
     char choice, choice2, choice3, choice4;
+    if (strcmp(argv[1], "-a") == 0)
+        compressorAuto(argc, argv);
     while(choice != '3'){
         plog("\nCompressor interface enabled.\n");
         plog("Select compressing mode: \n");
@@ -120,19 +186,26 @@ void compressNew(){
         plog("Couldn't create %s.\n", FILENAME_COMP);
         return;
     }
-    int count = 0;
-    while (entry != NULL && entry->d_name[0] != '.'){
-        char filename[150] = "";
-        strcpy(filename, FILENAME_SNAPS);
-        strcat(filename, "/");
-        strcat(filename, entry->d_name);
-        f_temp = fopen(filename, "r");
-        filenameToTime(entry->d_name, time, 0);
-        readFile(f_temp, buffer);
-        updateChannels(buffer, time);
-        fclose(f_temp);
+    while (entry != NULL){
+        char namecheck[10] = "";
+        /* Check only for snap_ files in the directory */
+        if (strlen(entry->d_name) > 5){
+            memcpy(namecheck, entry->d_name, 5 * sizeof (char));
+            namecheck[6] = '\0';
+            if (strcmp(namecheck, "snap_") == 0) {
+                char filename[150] = "";
+                strcpy(filename, FILENAME_SNAPS);
+                strcat(filename, "/");
+                strcat(filename, entry->d_name);
+                f_temp = fopen(filename, "r");
+                filenameToTime(entry->d_name, time, 0);
+                readFile(f_temp, buffer);
+                updateChannels(buffer, time);
+                fclose(f_temp);
+                plog("Read %d files...\n", ++filenum);
+            }
+        }
         entry = readdir(directory);
-        plog("Read %d files...\n", ++count);
     }
     saveCompressedChannels(f_compressed);
     fclose(f_compressed);
@@ -210,8 +283,10 @@ void updateChannels(char* buffer, struct tm* time){
             } else {
                 weight = 1;
             }
+            channels[index].average += iclients;
+            channels[index].average /= 2;
             channels[index].average_wcom += (iclients * weight);
-            channels[index].average_wsum += 1;
+            channels[index].average_wsum = filenum;
         }
         if (iclients > 0){
             channels[index].lastActive = *time;

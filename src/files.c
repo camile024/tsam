@@ -84,14 +84,23 @@ int createSnapshot(char* buffer){
     printf("Data size: %lu\n", strlen(bufptr));
     char cid[8] = "";
     char pid[8] = "";
+    char permflag[8] = "";
     bufptr = getNextField(bufptr, cid, "cid=");
     while (bufptr != NULL){
         char chname[100] = "";
         char clients[5] = "";
         bufptr = getNextField(bufptr, pid, "pid=");
         bufptr = getNextField(bufptr, chname, "channel_name=");
+        bufptr = getNextField(bufptr, permflag, "channel_flag_permanent=");
         bufptr = getNextField(bufptr, clients, "total_clients=");
-        fprintf(f_snapshot, "cid=%s\npid=%s\nchannel_name=%s\ntotal_clients=%s\n\n", cid, pid, chname, clients);
+        /* Add only if permament or temporary not ignored */
+        if ( 
+                ( strcmp(ignoretemp, "1") == 0 && strcmp(permflag, "1") == 0 )
+                || (strcmp(ignoretemp, "0") == 0)
+                ){
+            fprintf(f_snapshot, "cid=%s\npid=%s\nchannel_name=%s\ntotal_clients=%s\n\n", cid, pid, chname, clients);
+        }
+        /* Get next channel */
         bufptr = getNextField(bufptr, cid, "cid=");
     }
     fclose(f_snapshot);
@@ -133,6 +142,8 @@ void getSettings(){
     getValue(buffer, recordstart);
     getField(f_settings, buffer, "record-end=");
     getValue(buffer, recordend);
+    getField(f_settings, buffer, "ignore-temp=");
+    getValue(buffer, ignoretemp);
     plog("Host: %s:%s\nServerID: %s\nUsername: %s\n", ip, port, sid, username);
     fclose(f_settings);
 }

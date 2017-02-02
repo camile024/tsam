@@ -29,3 +29,6 @@ Create snapshots only during these hours:
 record-start=07
 
 record-end=00
+
+Ignore tracking temporary channels (incl. semi-permament)
+ignore-temp=1

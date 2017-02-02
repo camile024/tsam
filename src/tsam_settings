@@ -14,9 +14,9 @@ password=admin
 
 [SETTINGS]
 Delay between snapshots in seconds:
-delay-seconds=10
+delay-seconds=3600
 
-Removes logs older than value in days:
+Removes snapshots older than value in days:
 old-time=62
 
 Peak hours start time:
@@ -29,3 +29,6 @@ Create snapshots only during these hours:
 record-start=07
 
 record-end=00
+
+Ignore tracking temporary channels (incl. semi-permament)
+ignore-temp=1

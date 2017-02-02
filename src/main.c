@@ -27,6 +27,7 @@ char peakstart[5]= "";
 char peakend[5] = "";
 char recordstart[5] = "";
 char recordend[5] = "";
+char ignoretemp[5] = "";
 
 
 /* Directories */
@@ -46,7 +47,7 @@ char FILENAME_COMP[FILENAME_SIZE] = "tsam_compressed";
 int main(int argc, char** argv) {
     prepareFilenames();
     prepareDirectories(argv);
-    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
+    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a") == 0)){
         strcat(FILENAME_LOGS, "/log-comp");
         openLogs();
         getSettings();
@@ -58,8 +59,8 @@ int main(int argc, char** argv) {
     plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" =======\n");
     plog("=================================================================\n");
     
-    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a"))){
-        startCompressor();
+    if ((argc > 1) && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-a") == 0)){
+        startCompressor(argc, argv);
     } else {
         getSettings();
         startUpdater();
