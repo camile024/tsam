@@ -1,4 +1,4 @@
-# TSAM (Current version: 0.92 [29/01/2017])
+# TSAM (Current version: 0.93 [02/02/2017])
 Teamspeak Activity Monitor
 
 This software is used to log in to your teamspeak server using TCP/IP protocol and your query data, to gather and store details about the server. I use it on my Raspberry Pi, running 24/7 to determine which channels are abandoned and which channels are particularily active to move them higher up the hierarchy (less scrolling).  
@@ -28,12 +28,14 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 2) Edit 'tsam_settings' file  
 3) Run tsam (./tsam in terminal) or add to autostart  
 4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
+5) For more functionality see [manual.md](the manual.md file)  
   
 ##Installation/Usage (Raspberry Pi/Debian-based distros)
 1) Copy contents of the [bin/rasppi/](bin/rasppi) folder to your raspberry pi  
 2) Edit 'tsam_settings' file  
 3) './tsam' in terminal or just run 'tsam' file (can set to autostart)  
 4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
+5) For more functionality see [manual.md](the manual.md file)  
   
 ##Compilation (Linux)
 1) Copy contents of the [src/](src/) folder (make sure to copy .h + .c + makefile files and nbproject folder)  
