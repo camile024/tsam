@@ -28,14 +28,14 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 2) Edit 'tsam_settings' file  
 3) Run tsam (./tsam in terminal) or add to autostart  
 4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
-5) For more functionality see [manual.md](the manual.md file)  
+5) For more functionality see [the manual.md file](manual.md)  
   
 ##Installation/Usage (Raspberry Pi/Debian-based distros)
 1) Copy contents of the [bin/rasppi/](bin/rasppi) folder to your raspberry pi  
 2) Edit 'tsam_settings' file  
 3) './tsam' in terminal or just run 'tsam' file (can set to autostart)  
 4) Run tsam with parameter -c or -a (./tsam -c) to use the compressor (converts all the snapshot files into a compressed file with averages/last activity etc. and shows it in a neat output).  
-5) For more functionality see [manual.md](the manual.md file)  
+5) For more functionality see [the manual.md file](manual.md)  
   
 ##Compilation (Linux)
 1) Copy contents of the [src/](src/) folder (make sure to copy .h + .c + makefile files and nbproject folder)  
