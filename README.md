@@ -45,6 +45,16 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 
 ##Changelog:
   
+###Version 0.93 (02/02/2017):  
+**NOT COMPATIBLE WITH EARLIER SETTINGS FILE** (although a missing line can be added to the end of the file - the setting: ignore-temp= with value 0 or 1 (false/true) )  
+  
+-Added ignoring temporary channels when gathering snapshots (temp channels from earlier snapshots will not be removed and will still be considered)  
+-Added automatisation for the compressor for usage straight from the command line (e.g.  
+"./tsam -a print -save -inc -avg >> programlog.txt" will create a compressed file, sort it increasingly according to their average client number, save the result to file and exit, at the same time saving all the program output in programlog.txt) - see github page -> manual.md or run ./tsam with parameters: -a help  
+-Reworked channel rank to consider the span of all the snapshot files, not just the snapshots that include the channel  
+-Fixed average number not updating  
+-Fixed not all snapshot files being read by compressor  
+  
 ###Version 0.92 (29/01/2017):  
 **NOT COMPATIBLE WITH 0.9/0.91 SNAPSHOTS/SETTINGS FILE(S)!**  
 -Added saving compressor's sorted/view results to file  
