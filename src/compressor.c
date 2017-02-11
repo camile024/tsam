@@ -288,7 +288,8 @@ void updateChannels(char* buffer, struct tm* time){
             channels[index].average_wcom += (iclients * weight);
             channels[index].average_wsum = filenum;
         }
-        if (iclients > 0){
+        /* Update last active */
+        if (iclients > 0 && timecmp(channels[index].lastActive, *time) < 0){
             channels[index].lastActive = *time;
             channels[index].lastUserNum = iclients;
         }
