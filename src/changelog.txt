@@ -1,5 +1,6 @@
 Version 0.94
 -Fixed last active time/date not updating properly in the compressor
+-Fixed wrong channel rank when channel existed only in 1 snapshot file (e.g. temp channels)
 
 Version 0.93 (02/02/2017):
 NOT COMPATIBLE WITH EARLIER SETTINGS FILE (although a missing line can be added to the end of the file - the setting: ignore-temp= with value 0 or 1 (false/true) )

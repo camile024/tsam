@@ -267,11 +267,11 @@ void updateChannels(char* buffer, struct tm* time){
             /* Peak hours */
             if (withinPeak(time->tm_hour)){
                 channels[index].average_wcom = iclients * 1.34; //every 3 clients get 1 free (update below too if changed)
-                channels[index].average_wsum = 1;
+                channels[index].average_wsum = filenum;
             /* non-peak */
             } else {
                 channels[index].average_wcom = iclients;
-                channels[index].average_wsum = 1;
+                channels[index].average_wsum = filenum;
             }
         /* Channel exists in the array*/
         } else {
