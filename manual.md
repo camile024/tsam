@@ -1,9 +1,9 @@
-#The Manual For TSAM - Teamspeak Activity Monitor
+# The Manual For TSAM - Teamspeak Activity Monitor
 Last update - 02/02/2017 - release of 0.93
-#Index
+# Index
 [1. Settings file](#settings-file-explanation)  
 [2. Running/usage](#runningusage)
-#Settings file explanation
+# Settings file explanation
 A settings file must have the following (in a particular order) lines:  
 **ip=** followed by the ip number of the server. Used to connect to a particular TeamSpeak server via telnet.  
 **port=** followed by the **query** port number of the server, same as above.  
@@ -23,16 +23,16 @@ snapshots
 The number of characters/whitespaces between each *option=value* is trivial and does not affect the file reading.
 Settings file has to be in the executable's folder.  
   
-#Running/usage
+# Running/usage
 The software can be run in 3 modes:
-##Regular
+## Regular
 Use ./tsam to run (no parameters). Main mode - creates snapshots and saves them in the data/ folder every X seconds specified in the settings
 file. Cannot be interacted with and runs until either closed by user or an error occurs.
-##With parameter -c
+## With parameter -c
 Example: ./tsam -c  
 Used to compile all the snapshot files into a compressed file, which analyses all the snapshot files and provides statistics for
 each channel. Includes a text-based UI to display the results, sort them, or save to file
-##With parameter -a
+## With parameter -a
 Example: **./tsam -a [main_parameter] [extra_options]**
 Can be used as a Linux command-line tool. Behaves like ./tsam -c, but accepts a set of parameters and exits automatically after finishing.
 Useful if, for example, a scipt is to be run to generate a new compressed file/results every X time.  
