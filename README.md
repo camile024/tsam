@@ -45,8 +45,8 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 
 ## Changelog:
 ### Version 0.94 (25/08/2017)
--Fixed bugs related to updating channel's last active date
--Fixed counting channel's rank for channels with only 1 occurence (e.g. temporary)
+-Fixed bugs related to updating channel's last active date  
+-Fixed counting channel's rank for channels with only 1 occurence (e.g. temporary)  
 
 ### Version 0.93 (02/02/2017):  
 **NOT COMPATIBLE WITH EARLIER SETTINGS FILE** (although a missing line can be added to the end of the file - the setting: ignore-temp= with value 0 or 1 (false/true) )  
