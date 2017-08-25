@@ -1,4 +1,4 @@
-# TSAM (Current version: 0.93 [02/02/2017])
+# TSAM (Current version: 0.94 [25/08/2017])
 Teamspeak Activity Monitor
 
 This software is used to log in to your teamspeak server using TCP/IP protocol and your query data, to gather and store details about the server. I use it on my Raspberry Pi, running 24/7 to determine which channels are abandoned and which channels are particularily active to move them higher up the hierarchy (less scrolling).  
@@ -44,7 +44,10 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 4) Make sure to provide tsam_settings file in the executable folder
 
 ## Changelog:
-  
+### Version 0.94 (25/08/2017)
+-Fixed bugs related to updating channel's last active date
+-Fixed counting channel's rank for channels with only 1 occurence (e.g. temporary)
+
 ### Version 0.93 (02/02/2017):  
 **NOT COMPATIBLE WITH EARLIER SETTINGS FILE** (although a missing line can be added to the end of the file - the setting: ignore-temp= with value 0 or 1 (false/true) )  
   
