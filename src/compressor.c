@@ -293,6 +293,10 @@ void updateChannels(char* buffer, struct tm* time){
                 || (iclients > 0 && channels[index].lastUserNum == 0)){
             channels[index].lastActive = *time;
             channels[index].lastUserNum = iclients;
+        } else if ( (timecmp(channels[index].lastActive, *time) > 0) 
+                && channels[index].lastUserNum == 0
+                && iclients == 0){
+            channels[index].lastActive = *time; //go back with last activity if earlier empty record found
         }
         strcpy(channels[index].lastName, chname);
         /* Update parents if any */
