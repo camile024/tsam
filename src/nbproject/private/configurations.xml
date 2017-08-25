@@ -28,13 +28,13 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH} -c"</runcommandpicklistitem>
           <runcommandpicklistitem></runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -c</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -a help</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -a print -save -dec -rank</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -a print -save -dec -cid</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -c</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <runcommand>"${OUTPUT_PATH}" -c</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
