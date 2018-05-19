@@ -1,1 +1,1 @@
-ledutil 0 OUTPUT HIGH
+#ledutil 0 OUTPUT HIGH

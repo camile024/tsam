@@ -8,7 +8,7 @@
 #pragma once
 
 /* Program settings */
-#define VERSION "0.94"
+#define VERSION "0.95"
 #define BUFFER_SIZE 75000
 #define BUFFER_FILESIZE 500
 #define FILENAME_SIZE 250

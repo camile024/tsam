@@ -36,7 +36,10 @@ char FILENAME_SETTINGS[FILENAME_SIZE] = "tsam_settings";
 char FILENAME_LOGS[FILENAME_SIZE] = "logs";
 char FILENAME_SNAPS[FILENAME_SIZE] = "data";
 char FILENAME_COMP[FILENAME_SIZE] = "tsam_compressed";
-    
+
+char FILENAME_SCRIPT_START[FILENAME_SIZE] = "./tsam_onStartup.sh";
+char FILENAME_SCRIPT_ERROR[FILENAME_SIZE] = "./tsam_onError.sh";  
+char FILENAME_SCRIPT_SNAPSHOT[FILENAME_SIZE] = "./tsam_onSnapshot.sh";
 
 
 
@@ -55,6 +58,7 @@ int main(int argc, char** argv) {
         strcat(FILENAME_LOGS, "/log");
         openLogs();
     }
+    system(FILENAME_SCRIPT_START);
     plog("\n\n=================================================================\n");
     plog("======== Puck's Teamspeak Activity Monitor. Version: "VERSION" =======\n");
     plog("=================================================================\n");
@@ -90,8 +94,9 @@ void openLogs(){
 /* Runs the software as updating app */
 void startUpdater(){
     struct tm* t_last = getCurrentTime();
-    if (testConnection() < 0)
+    if (testConnection() < 0) {
         cleanExit();
+    }
     plog("[LOG] Current time: %02d:%02d. Waiting for the next snapshot.\n", t_last->tm_hour, t_last->tm_min);
     int sleeptime = atoi(delay);
     while (1){
@@ -114,6 +119,7 @@ void startUpdater(){
  */
 void cleanExit(){
     struct tm* cur = getCurrentTime();
+    system(FILENAME_SCRIPT_ERROR);
     if (f_logs != NULL){
         plog("Terminating... (%02d:%02d %02d-%02d-%d)\n", cur->tm_hour, cur->tm_min, cur->tm_mday, cur->tm_mon+1, cur->tm_year+1900);
         fclose(f_logs);
@@ -142,8 +148,10 @@ int updateData(){
             error = createSnapshot(buffer);
         if (error < 0){
             plog("======== ERROR: ACTIVITY DUMP FAILED =======\n");
+            system(FILENAME_SCRIPT_ERROR);
         } else {
             plog("=========== ACTIVITY DUMP SUCCESS ==========\n");
+            system(FILENAME_SCRIPT_SNAPSHOT);
         }
     } else {
         plog("========== ABORT: NON-RECORD HOUR ==========\n");

@@ -1,3 +1,8 @@
+Version 0.95 (19/05/2017)
+-Added scripts on different events: Modify tsam_onError/tsam_onStartup/tsam_onSnapshot scripts. These will get ran when the program starts/fails for some reason and every time a snapshot is taken.
+
+============================================================
+
 Version 0.94 (25/08/2017)
 -Fixed bugs related to updating channel's last active date
 -Fixed counting channel's rank for channels with only 1 occurence (e.g. temporary)

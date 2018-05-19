@@ -1,9 +1,9 @@
-# TSAM (Current version: 0.94 [25/08/2017])
+# TSAM (Current version: 0.95 [25/08/2017])
 Teamspeak Activity Monitor
 
 This software is used to log in to your teamspeak server using TCP/IP protocol and your query data, to gather and store details about the server. I use it on my Raspberry Pi, running 24/7 to determine which channels are abandoned and which channels are particularily active to move them higher up the hierarchy (less scrolling).  
   
-**Platform:** Linux (development: Ubuntu, target: Raspberry Pi)  
+**Platform:** Linux (target: Raspberry Pi, other distros will work too, even if not debian-based)  
 **IDE:** NetBeans  
 
 ## ToDo:
@@ -12,7 +12,8 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 ## Features:
 **Program does the following repeatedly, after time interval and during times specified by user (e.g. every 1 hour, 12:00-00:00):**  
 -Stores channel IDs, parent channel's ID, channel name, number of clients on the channel  
--Removes old data (if specified, e.g. data older than 7 days)  
+-Removes old data (if specified, e.g. data older than 7 days)
+-Runs desired .sh scripts on startup/error/snapshot (e.g. turn an LED on if failed to let user know)  
   
 **Each time requested the program:**  
 -Calculates/shows each channel's data based on the files gathered:  
@@ -23,7 +24,7 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 *average activity (based solely on the files provided)  
 *~~weighted average activity~~ channel rating (based on peak-hours of the server time specified by user and subchannels' activity)  
 
-## Installation/Usage (Ubuntu)
+## Installation/Usage (Ubuntu) - WARNING: CURRENTLY ONLY v0.94 COMPILATION IN /bin/ FOLDER! Follow 'Compilation (Linux)' Section for newer.
 1) Get contents of the [bin/ubuntu](bin/ubuntu) folder  
 2) Edit 'tsam_settings' file  
 3) Run tsam (./tsam in terminal) or add to autostart  
@@ -44,6 +45,9 @@ This software is used to log in to your teamspeak server using TCP/IP protocol a
 4) Make sure to provide tsam_settings file in the executable folder
 
 ## Changelog:
+### Version 0.95 (19/05/2017)
+-Added scripts on different events: Modify tsam_onError/tsam_onStartup/tsam_onSnapshot scripts. These will get ran when the program starts/fails for some reason and every time a snapshot is taken.
+
 ### Version 0.94 (25/08/2017)
 -Fixed bugs related to updating channel's last active date  
 -Fixed counting channel's rank for channels with only 1 occurence (e.g. temporary)  

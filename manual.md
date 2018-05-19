@@ -2,7 +2,8 @@
 Last update - 02/02/2017 - release of 0.93
 # Index
 [1. Settings file](#settings-file-explanation)  
-[2. Running/usage](#runningusage)
+[2. Script files] (#script-file-explanation)
+[3. Running/usage](#runningusage)
 # Settings file explanation
 A settings file must have the following (in a particular order) lines:  
 **ip=** followed by the ip number of the server. Used to connect to a particular TeamSpeak server via telnet.  
@@ -23,6 +24,13 @@ snapshots
 The number of characters/whitespaces between each *option=value* is trivial and does not affect the file reading.
 Settings file has to be in the executable's folder.  
   
+ 
+# Script file explanation
+Script files have been provided that can be modified to meet user's needs in terms of action during certain events (e.g. to do something in case of error):  
+**tsam_onStartup.sh** is ran when the software starts up.  
+**tsam_onError.sh** is ran when either server connection can't be established, software exits, or snapshot was not taken successfully.  
+**tsam_onSnapshot.sh** is ran every time a snapshot is taken and actual data is stored (every time SNAPSHOT SUCCESSFULL message pops up).  
+ 
 # Running/usage
 The software can be run in 3 modes:
 ## Regular
