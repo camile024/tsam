@@ -2,7 +2,7 @@
 Last update - 02/02/2017 - release of 0.93
 # Index
 [1. Settings file](#settings-file-explanation)  
-[2. Script files] (#script-file-explanation)
+[2. Script files](#script-file-explanation)  
 [3. Running/usage](#runningusage)
 # Settings file explanation
 A settings file must have the following (in a particular order) lines:  
