@@ -1,0 +1,1 @@
+ledutil 0 OUTPUT HIGH
